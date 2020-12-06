@@ -83,14 +83,16 @@ for purple_point in testing_groups['P']:
     y_es.append(purple_point[1])
 plt.plot(x_es, y_es, 'ro', color='purple')
 
-plt.axis([-15, 15, -15, 15])
-plt.show()
+# plt.axis([-15, 15, -15, 15])
+
 
 # testing point p(x,y)
 p = (2.5, 7)
-
+plt.plot(2.5, 7, 'or')
 # Number of neighbours
 k = 3
 
 print("The value classified to unknown point is: {}". \
       format(classifyAPoint(testing_groups, p, k)))
+
+plt.show()
