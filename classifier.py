@@ -1,6 +1,8 @@
 import random
 import math
 import matplotlib.pyplot as plt
+from random import randrange
+import config
 
 COLORS = ("red", "green", "blue", "purple")
 COLORS_SHORT = ("R", "G", "B", "P")
@@ -85,9 +87,14 @@ class classifier:
 
     def create_and_classify_red_point(self, k=3):
 
-        x = random.randint(-50, 5)  # potom upravit o 2 desatinne miesta
-        y = random.randint(-50, 5)  # potom upravit o 2 desatinne miesta
-        p = (x, y)
+        if randrange(100) >= config.CHANCE_FOR_RANDOM_POINT:
+            x = random.randint(-config.GENERATOR_RANGE, 5)  # potom upravit o 2 desatinne miesta
+            y = random.randint(-config.GENERATOR_RANGE, 5)  # potom upravit o 2 desatinne miesta
+            p = (x, y)
+        else:
+            x = random.randint(-config.GENERATOR_RANGE, config.GENERATOR_RANGE)  # potom upravit o 2 desatinne miesta
+            y = random.randint(-config.GENERATOR_RANGE, config.GENERATOR_RANGE)  # potom upravit o 2 desatinne miesta
+            p = (x, y)
 
         classification_index = self.get_classification(p, k)
         self.testing_groups[COLORS_SHORT[classification_index]].append(p)  # Pridavame to pola trenovacich
@@ -98,9 +105,14 @@ class classifier:
 
     def create_and_classify_green_point(self, k=3):
 
-        x = random.randint(-5, 50)  # potom upravit o 2 desatinne miesta
-        y = random.randint(-50, 5)  # potom upravit o 2 desatinne miesta
-        p = (x, y)
+        if randrange(100) >= config.CHANCE_FOR_RANDOM_POINT:
+            x = random.randint(-5, config.GENERATOR_RANGE)  # potom upravit o 2 desatinne miesta
+            y = random.randint(-config.GENERATOR_RANGE, 5)  # potom upravit o 2 desatinne miesta
+            p = (x, y)
+        else:
+            x = random.randint(-config.GENERATOR_RANGE, config.GENERATOR_RANGE)  # potom upravit o 2 desatinne miesta
+            y = random.randint(-config.GENERATOR_RANGE, config.GENERATOR_RANGE)  # potom upravit o 2 desatinne miesta
+            p = (x, y)
 
         classification_index = self.get_classification(p, k)
         self.testing_groups[COLORS_SHORT[classification_index]].append(p)  # Pridavame to pola trenovacich
@@ -111,9 +123,14 @@ class classifier:
 
     def create_and_classify_blue_point(self, k=3):
 
-        x = random.randint(-50, 5)  # potom upravit o 2 desatinne miesta
-        y = random.randint(5, 50)  # potom upravit o 2 desatinne miesta
-        p = (x, y)
+        if randrange(100) >= config.CHANCE_FOR_RANDOM_POINT:
+            x = random.randint(-config.GENERATOR_RANGE, 5)  # potom upravit o 2 desatinne miesta
+            y = random.randint(5, config.GENERATOR_RANGE)  # potom upravit o 2 desatinne miesta
+            p = (x, y)
+        else:
+            x = random.randint(-config.GENERATOR_RANGE, config.GENERATOR_RANGE)  # potom upravit o 2 desatinne miesta
+            y = random.randint(-config.GENERATOR_RANGE, config.GENERATOR_RANGE)  # potom upravit o 2 desatinne miesta
+            p = (x, y)
 
         classification_index = self.get_classification(p, k)
         self.testing_groups[COLORS_SHORT[classification_index]].append(p)  # Pridavame to pola trenovacich
@@ -124,9 +141,14 @@ class classifier:
 
     def create_and_classify_purple_point(self, k=3):
 
-        x = random.randint(-5, 50)  # potom upravit o 2 desatinne miesta
-        y = random.randint(-5, 50)  # potom upravit o 2 desatinne miesta
-        p = (x, y)
+        if randrange(100) >= config.CHANCE_FOR_RANDOM_POINT:
+            x = random.randint(-5, config.GENERATOR_RANGE)  # potom upravit o 2 desatinne miesta
+            y = random.randint(-5, config.GENERATOR_RANGE)  # potom upravit o 2 desatinne miesta
+            p = (x, y)
+        else:
+            x = random.randint(-config.GENERATOR_RANGE, config.GENERATOR_RANGE)  # potom upravit o 2 desatinne miesta
+            y = random.randint(-config.GENERATOR_RANGE, config.GENERATOR_RANGE)  # potom upravit o 2 desatinne miesta
+            p = (x, y)
 
         classification_index = self.get_classification(p, k)
         self.testing_groups[COLORS_SHORT[classification_index]].append(p)  # Pridavame to pola trenovacich
@@ -134,3 +156,8 @@ class classifier:
 
         # For statistics, we either increment by one if right our classification matches or zero
         self.STATISTICS[k] += (COLORS_SHORT[classification_index] == "P")
+
+    def classify_random(self, p, k):
+        classification_index = self.get_classification(p, k)
+        self.testing_groups[COLORS_SHORT[classification_index]].append(p)  # Pridavame to pola trenovacich
+        plt.plot(p[0], p[1], 'or', color=COLORS[classification_index])  # Pridame bod a dame ho do klasifikacie
