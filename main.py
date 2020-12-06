@@ -1,58 +1,20 @@
 from array import *
 import matplotlib.pyplot as plt
 import math
+import random
 
-
-def classifyAPoint(points, p, k=3):
-    '''
-     This function finds the classification of p using
-     k nearest neighbor algorithm. It assumes only two
-     testing_groups and returns 0 if p belongs to group 0, else
-      1 (belongs to group 1).
-
-      Parameters -
-          points: Dictionary of training points having two keys - 0 and 1
-                   Each key have a list of training data points belong to that
-
-          p : A tuple, test data point of the form (x,y)
-
-          k : number of nearest neighbour to consider, default is 3
-    '''
-
-    distance = []
-    for group in points:
-        for feature in points[group]:
-            # calculate the euclidean distance of p from training points
-            euclidean_distance = math.sqrt((feature[0] - p[0]) ** 2 + (feature[1] - p[1]) ** 2)
-
-            # Add a tuple of form (distance,group) in the distance list
-            distance.append((euclidean_distance, group))
-
-            # sort the distance list in ascending order
-    # and select first k distances
-    distance = sorted(distance)[:k]
-
-    freq1 = 0  # frequency of group 0
-    freq2 = 0  # frequency og group 1
-
-    for d in distance:
-        if d[1] == 0:
-            freq1 += 1
-        elif d[1] == 1:
-            freq2 += 1
-
-    return 0 if freq1 > freq2 else 1
-
+COLORS = ("red", "green", "blue", "purple")
+COLORS_SHORT = ("R", "G", "B", "P")
 
 testing_groups = {
-    'R': [(-4.5, -4.4), (-4.1, -3), (-1.8, -2.4), (-2.5, -3.4), (-2, -1.4)],
-    'G': [(4.5, -4.4), (4.1, -3), (1.8, -2.4), (2.5, -3.4), (2, -1.4)],
-    'B': [(-4.5, 4.4), (-4.1, 3), (-1.8, 2.4), (-2.5, 3.4), (-2, 1.4)],
-    'P': [(4.5, 4.4), (4.1, 3), (1.8, 2.4), (2.5, 3.4), (2, 1.4)],
+    'R': [(-45, -44), (-41, -30), (-18, -24), (-25, -34), (-20, -14)],
+    'G': [(45, -44), (41, -30), (18, -24), (25, -34), (20, -14)],
+    'B': [(-45, 44), (-41, 30), (-18, 24), (-25, 34), (-20, 14)],
+    'P': [(45, 44), (41, 30), (18, 24), (25, 34), (20, 14)],
 }
 
-plt.plot([-15, 15], [0, 0])
-plt.plot([-0, 0], [-15, 15])
+plt.plot([-150, 150], [0, 0])
+plt.plot([-0, 0], [-150, 150])
 
 x_es = []
 y_es = []
@@ -83,16 +45,70 @@ for purple_point in testing_groups['P']:
     y_es.append(purple_point[1])
 plt.plot(x_es, y_es, 'ro', color='purple')
 
+
+def get_class_where_i_belong():
+    pass
+
+
+all_points = list()
+
+for group in testing_groups:
+    for point in testing_groups[group]:
+        all_points.append(point)
+
+
+def create_and_classify_red_point(p, k = 3):
+    global testing_groups
+
+    # Dont make random variables please, I should have learned that from last assignment
+    # x = random.randint(-50, 5)  # potom upravit o 2 desatinne miesta
+    # y = random.randint(-50, 5)  # potom upravit o 2 desatinne miesta
+
+    distances = []
+    for group in testing_groups:
+        for feature in testing_groups[group]:
+            euclidean_distances = math.sqrt((feature[0] - p[0]) ** 2 + (feature[1] - p[1]) ** 2)
+            distances.append((euclidean_distances, group))
+
+    distances = sorted(distances)[:k]
+    print(distances)
+
+    freqRed = 0  # R
+    freqGreen = 0  # G
+    freqBlue = 0  # B
+    freqPurple = 0  # P
+
+    for distance in distances:
+        if distance[1] == "R":
+            freqRed += 1
+        elif distance[1] == "G":
+            freqGreen += 1
+        elif distance[1] == "B":
+            freqBlue += 1
+        elif distance[1] == "P":
+            freqPurple += 1
+        else:
+            raise Exception("Unknown value")
+
+    frequencies = (freqRed, freqGreen, freqBlue, freqPurple)
+
+    testing_groups[COLORS_SHORT[frequencies.index(max(frequencies))]].append(p)
+
+    plt.plot(p[0], p[1], 'or', color=COLORS[frequencies.index(max(frequencies))])
+
+
 # plt.axis([-15, 15, -15, 15])
 
-
-# testing point p(x,y)
-p = (2.5, 7)
-plt.plot(2.5, 7, 'or')
 # Number of neighbours
 k = 3
 
-print("The value classified to unknown point is: {}". \
-      format(classifyAPoint(testing_groups, p, k)))
+p = (5, 5)
+create_and_classify_red_point(p, k)
+p = (5, 10)
+create_and_classify_red_point(p, k)
+p = (5, 15)
+create_and_classify_red_point(p, k)
+p = (-5, 2)
+create_and_classify_red_point(p, k)
 
 plt.show()
