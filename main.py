@@ -57,13 +57,7 @@ for group in testing_groups:
         all_points.append(point)
 
 
-def create_and_classify_red_point(p, k = 3):
-    global testing_groups
-
-    # Dont make random variables please, I should have learned that from last assignment
-    # x = random.randint(-50, 5)  # potom upravit o 2 desatinne miesta
-    # y = random.randint(-50, 5)  # potom upravit o 2 desatinne miesta
-
+def get_classification(p, k):
     distances = []
     for group in testing_groups:
         for feature in testing_groups[group]:
@@ -71,7 +65,6 @@ def create_and_classify_red_point(p, k = 3):
             distances.append((euclidean_distances, group))
 
     distances = sorted(distances)[:k]
-    print(distances)
 
     freqRed = 0  # R
     freqGreen = 0  # G
@@ -90,11 +83,23 @@ def create_and_classify_red_point(p, k = 3):
         else:
             raise Exception("Unknown value")
 
+    # Len taky helper, uz si nepamatam z prveho rocnika jak sa robim minimum a rozmyslat sa mi nad tym nechce
     frequencies = (freqRed, freqGreen, freqBlue, freqPurple)
 
-    testing_groups[COLORS_SHORT[frequencies.index(max(frequencies))]].append(p)
+    return frequencies.index(max(frequencies))
 
-    plt.plot(p[0], p[1], 'or', color=COLORS[frequencies.index(max(frequencies))])
+def create_and_classify_red_point(p, k = 3):
+    global testing_groups
+
+    # Dont make random variables please, I should have learned that from last assignment
+    # x = random.randint(-50, 5)  # potom upravit o 2 desatinne miesta
+    # y = random.randint(-50, 5)  # potom upravit o 2 desatinne miesta
+
+    # Pridavame to pola trenovacich, je to dobre? pri 40k to bude krastne
+    testing_groups[COLORS_SHORT[get_classification(p, k)]].append(p)
+
+    # Zistujeme farbu, resp. klasifikaciu
+    plt.plot(p[0], p[1], 'or', color=COLORS[get_classification(p, k)])
 
 
 # plt.axis([-15, 15, -15, 15])
